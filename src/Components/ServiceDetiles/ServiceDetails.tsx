@@ -4,8 +4,10 @@ import { Store } from "../../store";
 import { serverURL } from "../../config";
 import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { AppState, setSelectedService } from "../../Slices/AppSlice";
+import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
 import TextInput from "../TextInput";
+import DateInput from "../DateInput";
+import { ReservationState, sendReservationRequest } from "../../Slices/ReservationSlice";
 
 export type Order = {
     name: string;
@@ -13,12 +15,14 @@ export type Order = {
     lastName2: string;
     email: string;
     phoneNumber: string;
+    date: string;
     status: {
         name: boolean;
         lastName1: boolean;
         lastName2: boolean;
         email: boolean;
         phoneNumber: boolean;
+        date: boolean;
     }
 }
 
@@ -30,12 +34,14 @@ const ServiceDetails = () => {
         lastName2: "",
         email: "",
         phoneNumber: "",
+        date: "",
         status: {
             name: false,
             lastName1: false,
             lastName2: true,
             email: false,
             phoneNumber: false,
+            date: false,
         }
     });
 
@@ -43,6 +49,7 @@ const ServiceDetails = () => {
     const navegate = useNavigate();
 
     const { selectedService } = useSelector<Store>((state) => state.app) as AppState;
+    const { loading, lastReservation } = useSelector<Store>((state) => state.reservation) as ReservationState;
     const { serviceID } = useParams();
 
     const back = (e: any) => {
@@ -54,7 +61,7 @@ const ServiceDetails = () => {
     }
 
     const orderFormValidation = (): boolean => {
-        const { name, lastName1, lastName2, email, phoneNumber } = order.status;
+        const { name, lastName1, lastName2, email, phoneNumber, date } = order.status;
         if (!name)
             return false;
         if (!lastName1)
@@ -65,6 +72,8 @@ const ServiceDetails = () => {
             return false;
         if (!phoneNumber)
             return false;
+        if (!date)
+            return false;
         return true;
     }
 
@@ -72,6 +81,30 @@ const ServiceDetails = () => {
         if (!selectedService)
             dispatch(setSelectedService(serviceID));
     })
+
+    useEffect(() => {
+        dispatch(setLoading(loading));
+        if (lastReservation) {
+            setOrder({
+                name: "",
+                lastName1: "",
+                lastName2: "",
+                email: "",
+                phoneNumber: "",
+                date: "",
+                status: {
+                    name: false,
+                    lastName1: false,
+                    lastName2: true,
+                    email: false,
+                    phoneNumber: false,
+                    date: false,
+                }
+            })
+            alert("Reservacion se ha hecho correctamente!!");
+            navegate("/magicalHends/services");
+        }
+    }, [loading, lastReservation])
 
     const emailValidation = (email: string): boolean => {
         return email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? true : false;
@@ -99,6 +132,9 @@ const ServiceDetails = () => {
                 if (value !== "" ? ("0123456789".includes(value[value.length - 1]) && value.length < 10) : true)
                     setOrder({ ...order, phoneNumber: value, status: { ...order.status, phoneNumber: phoneNumberValidation(value) } });
                 break;
+            case "date":
+                setOrder({ ...order, date: value, status: { ...order.status, date: value !== "" ? true : false } });
+                break;
             default:
                 break;
         }
@@ -108,14 +144,35 @@ const ServiceDetails = () => {
         setReservation(true);
     }
 
+    const sendReservation = () => {
+        dispatch(sendReservationRequest({
+            name: order.name,
+            email: order.email,
+            lastName1: order.lastName1,
+            lastName2: order.lastName2,
+            date: order.date,
+            phoneNumber: order.phoneNumber
+        }) as any);
+    }
+
     return selectedService && (
         <Background id="backPromise" imageurl={serverURL + selectedService.imageURL} onClick={(e: any) => back(e)}>
+            <span id="backPromise" className="material-symbols-outlined backButton" onClick={(e: any) => back(e)}>reply</span>
             <div className="details">
                 <h1>{selectedService.name}</h1>
                 <h3>{selectedService.title}</h3>
                 <h2>{selectedService.description}</h2>
+                <h4>{selectedService.time}Min</h4>
                 <h4>{selectedService.price}€</h4>
                 <div className={reservation ? "reservationForm active" : "reservationForm"}>
+                    <DateInput
+                        name="date"
+                        label="Fecha de reservacion"
+                        value={order.date}
+                        onChange={onChange}
+                        validationError="Tienes qie elegir una fecha valida"
+                        isValid={order.status.date}
+                    />
                     <TextInput
                         name="name"
                         label="Nombre"
@@ -161,7 +218,9 @@ const ServiceDetails = () => {
                         validationError="No puedes dejar vacio este campo."
                         isValid={order.status.phoneNumber}
                     />
-                    <button disabled={!orderFormValidation()} onClick={onClick}>Reserva tu cita</button>
+                    <button disabled={!orderFormValidation()} onClick={sendReservation}>Reserva tu cita</button>
+                    <button style={{visibility: "hidden"}}></button>
+                    
                 </div>
                 {!reservation && <button onClick={onClick}>Reserva tu cita</button>}
             </div>

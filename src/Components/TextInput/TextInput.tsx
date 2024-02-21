@@ -25,7 +25,7 @@ const TextInput = (props: TextInputProps) => {
         <Background isValid={isValid !== null ? (!isValid && isBlur) : false}>
             <label>{label}</label>
             <input onChange={(e) => inputOnChange(e.target.value)} onBlur={() => setIsBlur(true)} type="text" value={value} placeholder={placeholder}/>
-            { (isValid !== null ? (!isValid && isBlur) : false) &&  <span>{validationError}</span> }
+            { (isValid !== null ? (!isValid && isBlur) : false) &&  <span className="errorText">{validationError}</span> }
         </Background>
     );
 }

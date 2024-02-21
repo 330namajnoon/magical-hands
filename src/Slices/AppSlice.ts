@@ -10,6 +10,7 @@ export type Service = {
     imageURL: string;
     description: string;
     price: number;
+    time: number;
     category: string[];
 }
 
@@ -70,6 +71,9 @@ const appSlice = createSlice({
         setSelectedService: (state, action: PayloadAction<string | null | undefined>) => {
             state.selectedService = state.services.find(s => s.id === action.payload);
         },
+        setLoading: (state, action) => {
+            state.isLoading = action.payload;
+        }
     },
     extraReducers: (builder => {
         // Get Services
@@ -101,6 +105,6 @@ const appSlice = createSlice({
     })
 });
 
-export const { searchForServices, setSelectedService } = appSlice.actions;
+export const { searchForServices, setSelectedService, setLoading } = appSlice.actions;
 
 export default appSlice.reducer;
