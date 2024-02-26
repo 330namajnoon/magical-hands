@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Background } from "./styles";
 import { Store } from "../../store";
 import { clientURL, serverURL, teamColors } from "../../config";
-import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
 import TextInput from "../TextInput";
@@ -34,7 +34,6 @@ const ServiceDetails = () => {
     const { selectedService } = useSelector<Store>((state) => state.app) as AppState;
     const { userInfo } = useSelector<Store>((state) => state.user) as UserState;
     const { loading, lastReservation, spriteSession, currentStatus } = useSelector<Store>((state) => state.reservation) as ReservationState;
-    const { serviceID } = useParams();
     const [search, setSearch] = useSearchParams();
     const location = useLocation();
     const [reservation, setReservation] = useState<boolean>(false);
