@@ -10,6 +10,7 @@ import DateInput from "../DateInput";
 import { ReservationState, getStripeSession, reservationStatuses, sendReservationInfoEmail, sendReservationRequest, setLastReservation } from "../../Slices/ReservationSlice";
 import { decode, encode } from "../../Utils/createTokenBase";
 import { UserState } from "../../Slices/UserSlice";
+import { setSearchQuerys } from "../../Utils/setSearchQuerys";
 
 export type Order = {
     name: string;
@@ -86,14 +87,6 @@ const ServiceDetails = () => {
         return true;
     }
 
-    const setSearchParam = () => {
-        const paramValue = encode(JSON.stringify({ name: order.name, lastName1: order.lastName1, lastName2: order.lastName2, email: order.email, phoneNumber: order.phoneNumber }));
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.set("user", paramValue);
-        const newSearchString = searchParams.toString();
-        setSearch(newSearchString);
-    };
-
     const emailValidation = (email: string): boolean => {
         return email.match(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/) ? true : false;
     }
@@ -134,25 +127,27 @@ const ServiceDetails = () => {
 
     const sendStripeSessionRequest = () => {
         const paramValue = encode(JSON.stringify({ ...order, serviceId: selectedService?.id, status: undefined }));
-        const searchParams = new URLSearchParams(location.search);
-        searchParams.set("reservationForm", paramValue);
-        const newSearchString = searchParams.toString();
+        const newSearchString = setSearchQuerys("reservationForm", paramValue, location.search);
+        console.log(`${clientURL}${location.pathname}?${newSearchString}`)
         if (selectedService)
             dispatch(getStripeSession({ email: order.email, price: selectedService?.price, service: selectedService.name, description: selectedService.title, successURL: `${clientURL}${location.pathname}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
     }
 
     useEffect(() => {
         if (!selectedService)
-            dispatch(setSelectedService(serviceID));
+            dispatch(setSelectedService(search.get("serviceId")));
     })
 
     useEffect(() => {
-        order.status.unChangeCount > 0 && setSearchParam();
+        if (order.status.unChangeCount > 0) {
+            const paramValue = encode(JSON.stringify({ name: order.name, lastName1: order.lastName1, lastName2: order.lastName2, email: order.email, phoneNumber: order.phoneNumber }));
+            setSearch(setSearchQuerys("user", paramValue, location.search));
+        }
     }, [order])
 
     useEffect(() => {
         const user: any = search.get("user") ? JSON.parse(decode(search.get("user") as string)) : userInfo as any;
-        if (userInfo)
+        if (user)
             setOrder({
                 ...order,
                 ...user,

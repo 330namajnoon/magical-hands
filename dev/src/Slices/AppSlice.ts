@@ -73,7 +73,7 @@ const appSlice = createSlice({
         },
         setLoading: (state, action) => {
             state.isLoading = action.payload;
-        }
+        },
     },
     extraReducers: (builder => {
         // Get Services

@@ -1,6 +1,8 @@
 
-export const serverURL = "http://calimocho.duckdns.org:4001/magical-hends";
-export const clientURL = "http://calimocho.duckdns.org:4242"
+export const serverURL = "https://sm-servers-f444269f63ca.herokuapp.com/magical-hends";
+export const clientURL = "https://sm-servers-f444269f63ca.herokuapp.com"
+//export const serverURL = "http://calimocho.duckdns.org:4001/magical-hends";
+//export const clientURL = "http://localhost:5173/"
 
 export const team = {
     colors: [

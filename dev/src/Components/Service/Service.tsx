@@ -2,17 +2,18 @@ import { Background } from "./styles";
 import { Service } from "../../Slices/AppSlice";
 import { useEffect, useState } from "react";
 import { serverURL, teamColors } from "../../config";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { setSearchQuerys } from "../../Utils/setSearchQuerys";
 
 const ServiceComponent = (props: Service) => {
     const navegate = useNavigate();
-
+    const location = useLocation();
     const [imageIsLoaded, setImageIsLoaded] = useState<boolean>(false);
 
-    const { name, imageURL, price } = props;
+    const { name, imageURL, price, id } = props;
 
     const onClick = () => {
-        navegate(props.id);
+        navegate(`?${setSearchQuerys("serviceId", id, location.search)}`);
     }
 
     useEffect(() => {
