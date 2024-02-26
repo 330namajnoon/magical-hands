@@ -1,5 +1,6 @@
 
 export const serverURL = "http://calimocho.duckdns.org:4001/magical-hends";
+export const clientURL = "http://calimocho.duckdns.org:4242"
 
 export const team = {
     colors: [

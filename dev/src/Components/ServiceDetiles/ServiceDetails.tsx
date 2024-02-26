@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Background } from "./styles";
 import { Store } from "../../store";
-import { serverURL, teamColors } from "../../config";
+import { clientURL, serverURL, teamColors } from "../../config";
 import { useLocation, useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
@@ -138,7 +138,7 @@ const ServiceDetails = () => {
         searchParams.set("reservationForm", paramValue);
         const newSearchString = searchParams.toString();
         if (selectedService)
-            dispatch(getStripeSession({ email: order.email, price: selectedService?.price, service: selectedService.name, description: selectedService.title, successURL: `http://localhost:5173${location.pathname}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
+            dispatch(getStripeSession({ email: order.email, price: selectedService?.price, service: selectedService.name, description: selectedService.title, successURL: `${clientURL}${location.pathname}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
     }
 
     useEffect(() => {
