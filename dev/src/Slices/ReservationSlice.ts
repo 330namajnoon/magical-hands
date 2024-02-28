@@ -111,7 +111,9 @@ const reservationSlice = createSlice({
         setLastReservation: (state, action) => {
             state.lastReservation = action.payload;
         },
-
+        setCurrentStatus: (state, action) => {
+            state.currentStatus = action.payload;
+        },
     },
     extraReducers: (builder) => {
         builder
@@ -138,9 +140,8 @@ const reservationSlice = createSlice({
                 state.loading = false;
 
             })
-            .addCase(sendReservationRequest.rejected, (state, action) => {
+            .addCase(sendReservationRequest.rejected, (state) => {
                 state.loading = false;
-                console.log(action.error.code);
             })
 
         builder
@@ -171,5 +172,5 @@ const reservationSlice = createSlice({
     }
 })
 
-export const { setLastReservation } = reservationSlice.actions;
+export const { setLastReservation, setCurrentStatus } = reservationSlice.actions;
 export default reservationSlice.reducer;

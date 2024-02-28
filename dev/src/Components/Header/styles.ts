@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-export const Background = styled.div<{teamColors: string[]}>`
+export const Background = styled.div<any>`
     display: flex;
     align-items: center;
     background-color: ${(props) => props.teamColors[0]};
     width: 100vw;
+    height: ${(props) => props.height}px;
     img {
         min-width: 50px;
         max-width: 50px;

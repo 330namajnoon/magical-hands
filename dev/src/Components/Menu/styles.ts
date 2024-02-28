@@ -1,11 +1,11 @@
 import styled from "styled-components";
 
-export const Background = styled.div<{teamColors: string[]}>`
+export const Background = styled.div<any>`
     display: flex;
     padding: 10px;
     border-bottom: solid 5px ${(props) => props.teamColors[0]};
     width: 100%;
-    height: 60px;
+    height: ${(props) => props.height}px;
     padding-right: 40px;
     align-items: center;
     background-color: ${(props) => props.teamColors[1]};

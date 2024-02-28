@@ -1,25 +1,28 @@
 import styled from "styled-components";
 import { menuHeight } from "../../Components/Menu/Menu";
 import { headerHeight } from "../../Components/Header/Header";
+import { teamColors } from "../../config";
 
-export const Background = styled.div<{teamColors: string[]}>`
+export const Background = styled.div`
     width: 100vw;
     height: ${window.innerHeight - (menuHeight + headerHeight)}px;
-    background-color: ${(props) => props.teamColors[3]};
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    background-color: ${teamColors[3]};
+    display: grid;
+    grid-template-rows: 0.1fr 0.1fr 1fr;
 
-    .services {
-        width: 100%;
+    .dates-container {
         display: flex;
         flex-direction: row;
-        flex-wrap: wrap;
+        align-items: center;
         justify-content: center;
-        max-height: 100%;
-        overflow-y: auto;
     }
 
+    .reservations-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        overflow: auto;
+    }
     @media screen and (max-width: 600px) {
      
     }

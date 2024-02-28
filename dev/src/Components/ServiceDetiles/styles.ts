@@ -1,9 +1,11 @@
 import styled from "styled-components";
+import { menuHeight } from "../Menu/Menu";
+import { headerHeight } from "../Header/Header";
 
-export const Background = styled.div<{ imageurl: string , teamColors: string[]}>`
+export const Background = styled.div<{ imageurl: string, teamColors: string[] }>`
     position: absolute;
     width: 100vw;
-    height: 100vh;
+    height: ${window.innerHeight - (menuHeight + headerHeight)}px;
     background-color: #0000002f;
     display: flex;
     flex-direction: column;
@@ -14,16 +16,18 @@ export const Background = styled.div<{ imageurl: string , teamColors: string[]}>
     background-position: center;
     background-size: cover;
 
-    span {
+    .backButton {
         position: absolute;
         top: 0px;
-        width: 95%;
-        color: ${(props) => props.teamColors[3]};
-        font-size: 30px;
-        padding: 5px;
-        width: 50px;
-        left: 850px;
-        
+        width: 100%;
+        span {
+            color: ${(props) => props.teamColors[3]};
+            padding: 8px;
+            font-size: 18px;
+            margin: 10px;
+            border-radius: 10vw;
+            background-color: ${(props) => props.teamColors[1] + 90};
+        }
     }
 
     .details {
@@ -37,6 +41,9 @@ export const Background = styled.div<{ imageurl: string , teamColors: string[]}>
         flex-direction: column;
         color: #ffffff;
         padding: 30px;
+        max-height: 80%;
+        overflow-y: auto;
+        box-sizing: content-box;
         h1 {
             font-weight: 600;
             margin-bottom: 20px;
@@ -134,14 +141,21 @@ export const Background = styled.div<{ imageurl: string , teamColors: string[]}>
             position: relative;
             top: 0px;
             left: 0px;
-            width: 93%;
+            width: 100%;
+            span {
+                padding: 8px;
+                font-size: 18px;
+                margin: 10px;
+                border-radius: 10vw;
+                background-color: ${(props) => props.teamColors[1] + 90};
+            }
         }
         .details {
             overflow-y: auto;
             box-sizing: content-box;
             position: relative;
             width: 75%;
-            height: 65%;
+            height: 80%;
             margin: 0;
         }
     }

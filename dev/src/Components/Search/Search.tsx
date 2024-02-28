@@ -43,9 +43,9 @@ const Search = () => {
     }, [appStore.categories])
 
     useEffect(() => {
-        if (appStore.categories.length > 0)
+        if (appStore.categories.length > 0 && appStore.services.length > 0)
             dispach(searchForServices(appStore.categories[0].id));
-    }, [appStore.categories])
+    }, [appStore.categories, appStore.services])
 
     return (
         <Background teamColors={teamColors}>

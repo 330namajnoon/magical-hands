@@ -75,8 +75,8 @@ export const Background = styled.div<{teamColors: string[]}>`
             width: 100%;
             overflow-x: auto;
             display: flex;
-            justify-content: center;
-            padding-left: 20px;
+            justify-content: flex-start;
+            padding-left: 10px;
             padding-bottom: 20px;
             box-sizing: border-box;
             .category {

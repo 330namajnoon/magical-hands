@@ -9,7 +9,7 @@ import { teamColors } from "../../config";
 
 const Services = () => {
     const dispach = useDispatch();
-    const state = useSelector<{app: AppState}>(state => state.app) as AppState;
+    const { servicesSearched } = useSelector<{ app: AppState }>(state => state.app) as AppState;
 
     useEffect(() => {
         dispach(getServices() as any);
@@ -18,11 +18,13 @@ const Services = () => {
 
     return (
         <Background teamColors={teamColors}>
-            <Search/>
+            <Search />
             <div className="services">
-                {state.servicesSearched.map((service, index) => (
-                    <ServiceComponent key={index} {...service}  />
-                ))}
+                {
+                    servicesSearched.map((service, index) => (
+                        <ServiceComponent key={index} {...service} />
+                    ))
+                }
             </div>
             <ServiceDetails />
         </Background>

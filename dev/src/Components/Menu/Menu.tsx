@@ -3,10 +3,13 @@ import { Background } from "./styles";
 import { useState } from "react";
 import { teamColors } from "../../config";
 
-export type MenuOption = {name: string; path: string, isSelected: boolean};
+export type MenuOption = { name: string; path: string, isSelected: boolean };
+
+export const menuHeight = 40;
 
 const Menu = () => {
     const navegate = useNavigate();
+    const location = useLocation();
     const { pathname } = useLocation();
 
     const [options, setOptions] = useState<MenuOption[]>([
@@ -27,24 +30,53 @@ const Menu = () => {
         },
     ]);
 
+    const [adminOptions, setAdminOptions] = useState<MenuOption[]>([
+        {
+            name: "Inicio",
+            path: "/magicalHends/admin",
+            isSelected: pathname.includes("/magicalHends/admin") ? true : false,
+        },
+        {
+            name: "Reservaciones",
+            path: "/magicalHends/admin/reservations",
+            isSelected: pathname.includes("/magicalHends/admin/reservations") ? true : false,
+        },
+    ]);
+
+
     const onClick = (option: MenuOption) => {
-        setOptions(options.map(option_ => {
-            const option__ = option_;
-            if (option__.name === option.name)
-                option__.isSelected = true;
-            else
-                option__.isSelected = false;
-            return option_;
-        }))
+        if (location.pathname.includes("admin"))
+            setAdminOptions(adminOptions.map(option_ => {
+                const option__ = option_;
+                if (option__.name === option.name)
+                    option__.isSelected = true;
+                else
+                    option__.isSelected = false;
+                return option_;
+            }))
+        else
+            setOptions(options.map(option_ => {
+                const option__ = option_;
+                if (option__.name === option.name)
+                    option__.isSelected = true;
+                else
+                    option__.isSelected = false;
+                return option_;
+            }))
         navegate(option.path);
     }
 
     return (
-        <Background teamColors={teamColors}>
+        <Background height={menuHeight} teamColors={teamColors}>
             <div className="options">
-                { options.map((option, index) => (
-                    <h1 className={option.isSelected ? "selected" : "notSelected"} key={index} onClick={() => onClick(option)} >{option.name}</h1>
-                ))}
+                {location.pathname.includes("admin") ?
+                    adminOptions.map((option, index) => (
+                        <h1 className={option.isSelected ? "selected" : "notSelected"} key={index} onClick={() => onClick(option)} >{option.name}</h1>
+                    ))
+                    :
+                    options.map((option, index) => (
+                        <h1 className={option.isSelected ? "selected" : "notSelected"} key={index} onClick={() => onClick(option)} >{option.name}</h1>
+                    ))}
             </div>
         </Background>
     );

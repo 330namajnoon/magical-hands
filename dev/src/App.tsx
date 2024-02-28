@@ -5,9 +5,10 @@ import Contact from "./Pages/Contact";
 import Loading from "./Components/Loading";
 import Services from "./Pages/Services";
 import ServiceDetiles from "./Components/ServiceDetiles";
-import Reservation from "./Components/Reservation";
 import Header from "./Components/Header";
 import ReservationInfo from "./Components/ReservationInfo";
+import Admin from "./Pages/Admin";
+import AdminReservations from "./Pages/AdminReservations";
 
 const App = () => {
 
@@ -23,9 +24,10 @@ const App = () => {
                 <Route path="/magicalHends/services" element={<Services />} >
                     <Route path=":serviceID" element={<ServiceDetiles />} />
                 </Route>
-                <Route path="/magicalHends/Services/reservationInfo" element={<ReservationInfo />} />
-                <Route path="/magicalHends/reservation" element={<Reservation />} />
+                <Route path="/magicalHends/services/reservationInfo" element={<ReservationInfo />} />
                 <Route path="/magicalHends/contact" element={<Contact/>} />
+                <Route path="/magicalHends/admin" element={<Admin/>} />
+                <Route path="/magicalHends/admin/reservations" element={<AdminReservations/>} />
             </Routes>
         </BrowserRouter>
     );

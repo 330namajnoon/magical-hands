@@ -1,22 +1,36 @@
 import { Background } from "./styles";
 import { teamColors } from "../../config";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { setSelectedService } from "../../Slices/AppSlice";
+import { setLastReservation } from "../../Slices/ReservationSlice";
+import { useEffect } from "react";
 
 export type MenuOption = { name: string; path: string, isSelected: boolean };
 
 const Menu = () => {
     const navigate = useNavigate();
-    const params = useParams();
+    const dispach = useDispatch();
+    const [search, setSearch] = useSearchParams();
 
-    console.log(params);
+    useEffect(() => {
+        if (search)
+            setSearch("");
+    }, [])
+
+    const onClick = () => {
+        dispach(setSelectedService(null));
+        dispach(setLastReservation(null));
+        navigate("/magicalHends/services");
+    }
 
     return (
         <Background teamColors={teamColors}>
             <h1>¡Reserva Confirmada!</h1>
             <h2>
-                    Pronto recibirás un correo electrónico con todos los detalles de tu reserva. ¡Gracias por elegirnos!
+                Pronto recibirás un correo electrónico con todos los detalles de tu reserva. ¡Gracias por elegirnos!
             </h2>
-            <button onClick={() => navigate("/magicalHends/services")}>Continuar</button>
+            <button onClick={onClick}>Continuar</button>
         </Background>
     );
 }

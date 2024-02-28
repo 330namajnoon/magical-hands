@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
 import TextInput from "../TextInput";
 import DateInput from "../DateInput";
-import { ReservationState, getStripeSession, reservationStatuses, sendReservationInfoEmail, sendReservationRequest, setLastReservation } from "../../Slices/ReservationSlice";
+import { ReservationState, getStripeSession, reservationStatuses, sendReservationInfoEmail, sendReservationRequest, setCurrentStatus, setLastReservation } from "../../Slices/ReservationSlice";
 import { decode, encode } from "../../Utils/createTokenBase";
 import { UserState } from "../../Slices/UserSlice";
 import { setSearchQuerys } from "../../Utils/setSearchQuerys";
@@ -31,7 +31,7 @@ export type Order = {
 }
 
 const ServiceDetails = () => {
-    const { selectedService } = useSelector<Store>((state) => state.app) as AppState;
+    const { selectedService, services } = useSelector<Store>((state) => state.app) as AppState;
     const { userInfo } = useSelector<Store>((state) => state.user) as UserState;
     const { loading, lastReservation, spriteSession, currentStatus } = useSelector<Store>((state) => state.reservation) as ReservationState;
     const [search, setSearch] = useSearchParams();
@@ -127,7 +127,6 @@ const ServiceDetails = () => {
     const sendStripeSessionRequest = () => {
         const paramValue = encode(JSON.stringify({ ...order, serviceId: selectedService?.id, status: undefined }));
         const newSearchString = setSearchQuerys("reservationForm", paramValue, location.search);
-        console.log(`${clientURL}${location.pathname}?${newSearchString}`)
         if (selectedService)
             dispatch(getStripeSession({ email: order.email, price: selectedService?.price, service: selectedService.name, description: selectedService.title, successURL: `${clientURL}${location.pathname}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
     }
@@ -153,6 +152,7 @@ const ServiceDetails = () => {
                 status: { ...order.status, email: true, lastName1: true, lastName2: true, name: true, phoneNumber: true }
             });
         if (search.get("reservationForm")) {
+            dispatch(setLoading(true));
             const { name, date, lastName1, email, lastName2, phoneNumber, serviceId } = JSON.parse(decode(search.get("reservationForm") as string));
             dispatch(sendReservationRequest({
                 name: name,
@@ -178,32 +178,44 @@ const ServiceDetails = () => {
                 open(spriteSession.url);
                 break;
             case reservationStatuses.SENDED_RESERVATION_REQUEST:
-                if (lastReservation)
-                    dispatch(sendReservationInfoEmail({
-                        date: lastReservation.date.replace(/-/g, "/"),
-                        duration: selectedService ? selectedService.time + "m" : "",
-                        email: lastReservation.email,
-                        lastName1: lastReservation.lastName1,
-                        lastName2: lastReservation.lastName2,
-                        name: lastReservation.name,
-                        service: selectedService ? selectedService.name : "",
-                        startTime: lastReservation.startTime
-                    }) as any);
+                if (lastReservation) {
+                    const serviceId = search.get("serviceId");
+                    let service = null;
+                    if (selectedService) service = selectedService;
+                    else if (serviceId)
+                        service = services.find((service => service.id === serviceId));
+                    if (service)
+                        dispatch(sendReservationInfoEmail({
+                            date: lastReservation.date.replace(/-/g, "/"),
+                            duration: service.time + "m",
+                            email: lastReservation.email,
+                            lastName1: lastReservation.lastName1,
+                            lastName2: lastReservation.lastName2,
+                            name: lastReservation.name,
+                            service: service.name,
+                            startTime: lastReservation.startTime
+                        }) as any);
+                }
                 break;
             case reservationStatuses.SENDED_EMAIL:
                 setReservation(false);
                 dispatch(setLastReservation(null));
-                navegate("/magicalHends/Services/reservationInfo");
+                dispatch(setSelectedService(null));
+                dispatch(setCurrentStatus(reservationStatuses.RESERVATION_FORM));
+                dispatch(setLoading(false));
+                navegate("/magicalHends/services/reservationInfo");
                 break;
             default:
                 break;
         }
-    }, [currentStatus])
+    }, [currentStatus, services])
 
 
     return selectedService && (
         <Background id="backPromise" imageurl={serverURL + selectedService.imageURL} teamColors={teamColors} onClick={(e: any) => back(e)}>
-            <span id="backPromise" className="material-symbols-outlined backButton" onClick={(e: any) => back(e)}>reply</span>
+            <div  className="backButton">
+                <span id="backPromise" className="material-symbols-outlined" onClick={(e: any) => back(e)}>reply</span>
+            </div>
             <div className="details">
                 <h1>{selectedService.name}</h1>
                 <h3>{selectedService.title}</h3>
