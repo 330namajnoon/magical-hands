@@ -41,6 +41,12 @@ const Menu = () => {
             path: "/magicalHends/admin/reservations",
             isSelected: pathname.includes("/magicalHends/admin/reservations") ? true : false,
         },
+        {
+            name: "Calendar",
+            path: "/magicalHends/admin/calendar",
+            isSelected: pathname.includes("/magicalHends/admin/calendar") ? true : false,
+        },
+        
     ]);
 
 

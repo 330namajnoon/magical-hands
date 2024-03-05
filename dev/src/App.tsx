@@ -9,6 +9,7 @@ import Header from "./Components/Header";
 import ReservationInfo from "./Components/ReservationInfo";
 import Admin from "./Pages/Admin";
 import AdminReservations from "./Pages/AdminReservations";
+import AdminCalendar from "./Pages/AdminCalendar";
 
 const App = () => {
 
@@ -28,6 +29,7 @@ const App = () => {
                 <Route path="/magicalHends/contact" element={<Contact/>} />
                 <Route path="/magicalHends/admin" element={<Admin/>} />
                 <Route path="/magicalHends/admin/reservations" element={<AdminReservations/>} />
+                <Route path="/magicalHends/admin/calendar" element={<AdminCalendar/>} />
             </Routes>
         </BrowserRouter>
     );
