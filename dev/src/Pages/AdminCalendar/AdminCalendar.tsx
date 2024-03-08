@@ -8,7 +8,7 @@ import { setLoading } from "../../Slices/AppSlice";
 
 
 const AdminCalendar = () => {
-    const { adminHours, isLoading, dateInputsValue, error } = useSelector<Store>((state) => state.admin) as AdminState;
+    const { adminHours, isLoading, dateInputsValue } = useSelector<Store>((state) => state.admin) as AdminState;
     const [index, setIndex] = useState<number | null>(null);
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [status, setStatus] = useState<boolean>(false);
