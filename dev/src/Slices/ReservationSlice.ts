@@ -23,6 +23,7 @@ export type ReservationState = {
     lastReservation: ReservationForm | null;
     spriteSession: any;
     currentStatus: string;
+    availableHours: string[];
 }
 
 export type ReservationForm = {
@@ -62,6 +63,7 @@ const initialState: ReservationState = {
     spriteSession: null,
     lastReservation: null,
     currentStatus: reservationStatuses.RESERVATION_FORM,
+    availableHours: [],
 }
 
 export const getReservationesByDate = createAsyncThunk<ReservationTime[], string>("reservationes/getReservationesByDate",
@@ -70,6 +72,13 @@ export const getReservationesByDate = createAsyncThunk<ReservationTime[], string
         return JSON.parse(response.data.data);
     }
 )
+
+export const getAvailableHoursByDate = createAsyncThunk<string[], string>("reservation/getAvailableHoursByDate",
+    async (date) => {
+        const response = await axios.get(`${serverURL}/availableHours/${date}`);
+        return response.data.data;
+    }
+);
 
 export const sendReservationRequest = createAsyncThunk<ReservationForm, ReservationForm>("reservation/sendReservationRequest",
     async (reservationForm) => {
@@ -168,6 +177,19 @@ const reservationSlice = createSlice({
             .addCase(getStripeSession.rejected, (state, action) => {
                 //state.loading = false;
                 state.error = action.error.code;
+            })
+        builder
+            .addCase(getAvailableHoursByDate.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(getAvailableHoursByDate.fulfilled, (state, action) => {
+                state.loading = false;
+                console.log(action.payload)
+                state.availableHours = action.payload;
+            })
+            .addCase(getAvailableHoursByDate.rejected, (state, action) => {
+                state.error = action.error.code;
+                state.loading = false;
             })
     }
 })

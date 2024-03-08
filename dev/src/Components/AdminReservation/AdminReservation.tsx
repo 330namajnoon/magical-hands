@@ -1,4 +1,4 @@
-import { MouseEvent, useState } from "react";
+import { useState } from "react";
 import { AdminReservationData } from "../../Slices/AdminSlice";
 import { Background } from "./styles";
 
