@@ -35,7 +35,10 @@ export type AdminState = {
     error: any;
     reservations: AdminReservationData[];
     dateInputsValue: DateInputsValue;
-    adminHours: AdminHour[];
+    adminHours: {
+        date: string;
+        hours: AdminHour[];
+    };
 }
 
 export const getAdminReservationsByDate = createAsyncThunk<AdminReservationData[], { startDate: string, endDate: string }>("admin/getAdminReservationsByDate",
@@ -45,9 +48,19 @@ export const getAdminReservationsByDate = createAsyncThunk<AdminReservationData[
     }
 )
 
-export const getAdminHoursByDate = createAsyncThunk<AdminHour[], string>("admin/getAdminHoursByDate",
+export const getAdminHoursByDate = createAsyncThunk<{date: string, hours: AdminHour[]}, string>("admin/getAdminHoursByDate",
     async (date) => {
         const response = await axios.get(`${serverURL}/adminHours/${date}`);
+        return JSON.parse(response.data.data);
+    }
+)
+
+export const saveAdminHoursByDate = createAsyncThunk<{date: string, hours: AdminHour[]}, {date: string, hours: AdminHour[]}>("admin/saveAdminHoursByDate",
+    async (hours) => {
+        const formData = new FormData();
+        console.log({date: hours.date, hours: hours.hours.filter((h => h.isAvailable))})
+        formData.append("hours", JSON.stringify({date: hours.date, hours: hours.hours.filter((h => h.isAvailable))}));
+        const response = await axios.post(`${serverURL}/adminHours`, formData);
         return JSON.parse(response.data.data);
     }
 )
@@ -62,7 +75,10 @@ const initialState: AdminState = {
     isLoading: false,
     error: null,
     reservations: [],
-    adminHours: [],
+    adminHours: {
+        date: dateToString(getDate(0)),
+        hours: [],
+    },
     dateInputsValue: {
         startDate: dateToString(getDate(0)),
         endDate: dateToString(getDate(30)),
@@ -70,18 +86,20 @@ const initialState: AdminState = {
     }
 }
 
-const createAdminHours = (renge: number = 15): AdminHour[] => {
+const createAdminHours = (renge: number = 15, availabledHours: {date: string, hours: AdminHour[]}): {date: string, hours: AdminHour[]} => {
     const hours: AdminHour[] = [];
-    for (let index = 0; index < 24 ; index++) {
+    const date: string = availabledHours.date;
+    for (let index = 0; index < 24; index++) {
         for (let index1 = 0; index1 < 60; index1++) {
             if (index1 % renge === 0) {
                 const hour = index < 10 ? `0${index}` : `${index}`;
                 const minutes = index1 < 10 ? `0${index1}` : `${index1}`;
-                hours.push({hour: `${hour}:${minutes}`, isAvailable: false});
+                const hourToString = `${hour}:${minutes}`;
+                hours.push({ hour: hourToString, isAvailable: availabledHours.hours.find(ah => ah.hour === hourToString) ? true : false });
             }
         }
     }
-    return hours;
+    return {date, hours};
 }
 
 const adminSlice = createSlice({
@@ -91,9 +109,12 @@ const adminSlice = createSlice({
         setDateInputsValue: (state, action: PayloadAction<{ key: keyof DateInputsValue, value: string }>) => {
             state.dateInputsValue[action.payload.key] = action.payload.value;
         },
-        setIsAvailableHour: (state, action: PayloadAction<number[]>) => {
-            action.payload.forEach(n => {
-                state.adminHours[n].isAvailable = !state.adminHours[n].isAvailable
+        setIsAvailableHour: (state, action: PayloadAction<{ hours: number[], isAvailable: boolean | null }>) => {
+            action.payload.hours.forEach(n => {
+                if (action.payload.isAvailable === null)
+                    state.adminHours.hours[n].isAvailable = !state.adminHours.hours[n].isAvailable;
+                else
+                    state.adminHours.hours[n].isAvailable = action.payload.isAvailable;
             })
         }
     },
@@ -110,15 +131,27 @@ const adminSlice = createSlice({
                 state.isLoading = false;
                 state.error = acrion.error.code;
             })
-            builder
+        builder
             .addCase(getAdminHoursByDate.pending, (state) => {
                 state.isLoading = true;
             })
             .addCase(getAdminHoursByDate.fulfilled, (state, action) => {
                 state.isLoading = false;
-                state.adminHours = action.payload.length > 0 ? action.payload : createAdminHours();
+                state.adminHours = createAdminHours(15, action.payload);
             })
             .addCase(getAdminHoursByDate.rejected, (state, action) => {
+                state.isLoading = false;
+                state.error = action.error.code;
+            })
+        builder
+            .addCase(saveAdminHoursByDate.pending, (state) => {
+                state.isLoading = true;
+            })
+            .addCase(saveAdminHoursByDate.fulfilled, (state, action) => {
+                state.isLoading = false;
+                state.adminHours = createAdminHours(15, action.payload);
+            })
+            .addCase(saveAdminHoursByDate.rejected, (state, action) => {
                 state.isLoading = false;
                 state.error = action.error.code;
             })
