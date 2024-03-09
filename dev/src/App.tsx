@@ -6,13 +6,13 @@ import Loading from "./Components/Loading";
 import Services from "./Pages/Services";
 import ServiceDetiles from "./Components/ServiceDetiles";
 import Header from "./Components/Header";
-import ReservationInfo from "./Components/ReservationInfo";
+import ReservationInfo from "./Components/ReservationInfo"; 
 import Admin from "./Pages/Admin";
 import AdminReservations from "./Pages/AdminReservations";
 import AdminCalendar from "./Pages/AdminCalendar";
+import { useSelector } from "react-redux";
 
 const App = () => {
-
   
     return (
         <BrowserRouter>

@@ -13,7 +13,7 @@ const Home = () => {
 
     return (
         <Background>
-            
+            Home
         </Background>
     );
 }

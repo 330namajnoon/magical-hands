@@ -1,11 +1,12 @@
-const express = require("express");
-const http = require("http");
-const path = require("path");
-const pdp = path.join(__dirname, "./dist");
-const port = process.env.PORT || 4000;
-const app = express();
-app.use(express.static(pdp));
-const server = http.createServer(app);
-server.listen(port, () => {
-    console.log(`server is up on ${port}!`);
+const { Server } = require("sm-express-server");
+
+const port = 4001;
+const server = new Server(port, "/");
+
+server.addControllers([]);
+server.app.get("/", (req, res) => {
+    res.send("<h1>Hola mundo de MAGICAL HANDS</h1>")
 })
+server.start(() => {
+    console.log(`server is up on port ${port}`);
+});
