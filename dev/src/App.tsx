@@ -10,7 +10,8 @@ import ReservationInfo from "./Components/ReservationInfo"; 
 import Admin from "./Pages/Admin";
 import AdminReservations from "./Pages/AdminReservations";
 import AdminCalendar from "./Pages/AdminCalendar";
-import { useSelector } from "react-redux";
+import routerAddresses from "./constants/routerAddresses";
+import { serverParam } from "./config";
 
 const App = () => {
   
@@ -20,16 +21,16 @@ const App = () => {
             <Menu/>
             <Loading/>
             <Routes>
-                <Route path="/magicalHends" element={<Home/>} />
-                <Route path="/magicalHends/home" element={<Home/>} />
-                <Route path="/magicalHends/services" element={<Services />} >
+                <Route path={serverParam} element={<Home/>} />
+                <Route path={routerAddresses.HOME} element={<Home/>} />
+                <Route path={routerAddresses.SERVICES} element={<Services />} >
                     <Route path=":serviceID" element={<ServiceDetiles />} />
                 </Route>
-                <Route path="/magicalHends/services/reservationInfo" element={<ReservationInfo />} />
-                <Route path="/magicalHends/contact" element={<Contact/>} />
-                <Route path="/magicalHends/admin" element={<Admin/>} />
-                <Route path="/magicalHends/admin/reservations" element={<AdminReservations/>} />
-                <Route path="/magicalHends/admin/calendar" element={<AdminCalendar/>} />
+                <Route path={routerAddresses.RESERVATION_INFO} element={<ReservationInfo />} />
+                <Route path={routerAddresses.CONTACT} element={<Contact/>} />
+                <Route path={routerAddresses.ADMIN} element={<Admin/>} />
+                <Route path={routerAddresses.ADMIN_RESERVATIONS} element={<AdminReservations/>} />
+                <Route path={routerAddresses.ADMIN_CALENDAR} element={<AdminCalendar/>} />
             </Routes>
         </BrowserRouter>
     );

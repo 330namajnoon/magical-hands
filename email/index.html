@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: "Roboto", sans-serif;
+            font-weight: 500;
+            font-style: normal;
+            box-sizing: border-box;
+        }
+
+        body {
+            overflow: hidden;
+            background-color: #F2F2F2;
+        }
+
+        .header {
+            background-color: #35592F;
+            color: #F2F2F2;
+            display: flex;
+            align-items: center;
+
+            padding: 5px;
+        }
+
+        .header h1 {
+            font-size: 20px;
+            margin-left: 10px;
+        }
+
+        .header img {
+            min-width: 50px;
+            max-width: 50px;
+            min-height: 50px;
+            max-height: 50px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="header">
+
+        <img src="http://calimocho.duckdns.org:4001/magical-hends/images/logo.png" alt="">
+        <h1>
+            MAGICAL HANDS 362
+        </h1>
+    </div>
+    <p><strong>Estimado/a</strong> {{to_name}},</p>
+    <p>Nos complace informarte que tu reserva ha sido confirmada con &eacute;xito. A continuaci&oacute;n,
+        encontrar&aacute;s los detalles de tu reserva:</p>
+    <div style="padding:5px;border-left:4px solid #d0d0d0;font-style:italic;">
+        <ul style="list-style-type: none;">
+
+            <li>
+                &#8226;Servicio Solicitado: {{message.service}}
+            </li>
+            <br>
+            <li>
+                &#8226;Fecha de Reserva: {{message.date}}
+            </li>
+            <br>
+            <li>
+                &#8226;Hora de Reserva: {{message.startTime}}
+            </li>
+            <br>
+            <li>
+                &#8226;Tiempo: {{message.duration}}
+            </li>
+        </ul>
+    </div>
+    <p>Por favor, no dudes en ponerte en contacto con nosotros si necesitas realizar alguna modificaci&oacute;n o tienes
+        alguna pregunta. Estamos aqu&iacute; para ayudarte en todo lo que necesites.</p>
+</body>
+
+</html>

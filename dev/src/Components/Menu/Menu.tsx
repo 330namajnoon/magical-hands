@@ -2,6 +2,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Background } from "./styles";
 import { useState } from "react";
 import { teamColors } from "../../config";
+import routerAddresses from "../../constants/routerAddresses";
 
 export type MenuOption = { name: string; path: string, isSelected: boolean };
 
@@ -15,36 +16,36 @@ const Menu = () => {
     const [options, setOptions] = useState<MenuOption[]>([
         {
             name: "Inicio",
-            path: "/magicalHends/home",
-            isSelected: pathname.includes("/magicalHends/home") ? true : false,
+            path: routerAddresses.HOME,
+            isSelected: pathname.includes(routerAddresses.HOME) ? true : false,
         },
         {
             name: "Servicios",
-            path: "/magicalHends/services",
-            isSelected: pathname.includes("/magicalHends/services") ? true : false,
+            path: routerAddresses.SERVICES,
+            isSelected: pathname.includes(routerAddresses.SERVICES) ? true : false,
         },
         {
             name: "Contacto",
-            path: "/magicalHends/contact",
-            isSelected: pathname.includes("/magicalHends/contact") ? true : false,
+            path: routerAddresses.CONTACT,
+            isSelected: pathname.includes(routerAddresses.CONTACT) ? true : false,
         },
     ]);
 
     const [adminOptions, setAdminOptions] = useState<MenuOption[]>([
         {
             name: "Inicio",
-            path: "/magicalHends/admin",
-            isSelected: pathname.includes("/magicalHends/admin") ? true : false,
+            path: "/admin",
+            isSelected: pathname.includes("/admin") ? true : false,
         },
         {
             name: "Reservaciones",
-            path: "/magicalHends/admin/reservations",
-            isSelected: pathname.includes("/magicalHends/admin/reservations") ? true : false,
+            path: "/admin/reservations",
+            isSelected: pathname.includes("/admin/reservations") ? true : false,
         },
         {
             name: "Calendar",
-            path: "/magicalHends/admin/calendar",
-            isSelected: pathname.includes("/magicalHends/admin/calendar") ? true : false,
+            path: "/admin/calendar",
+            isSelected: pathname.includes("/admin/calendar") ? true : false,
         },
         
     ]);

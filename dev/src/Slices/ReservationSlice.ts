@@ -184,7 +184,6 @@ const reservationSlice = createSlice({
             })
             .addCase(getAvailableHoursByDate.fulfilled, (state, action) => {
                 state.loading = false;
-                console.log(action.payload)
                 state.availableHours = action.payload;
             })
             .addCase(getAvailableHoursByDate.rejected, (state, action) => {

@@ -1,0 +1,67 @@
+[
+    {
+        "id": "MH-001",
+        "name": "Masaje Ayurvédico",
+        "title": "Masaje hindú ayurvédico con aceite caliente",
+        "imageURL": "/images/image001.jpeg",
+        "description": "Este masaje relajante utiliza nuestro aceite lujoso y caliente, con aromas para la relajación.  Los movimientos precisos y localizados promueven la descarga de tensión y un equilibrio entre la mente y el cuerpo. El masaje se realiza en todo el cuerpo, con aceite caliente que penetra en la piel, eliminando las impurezas y toxinas mencionadas que se acumulan en la piel. El masaje hindu esta conocido por ser un masaje Descontracturantr y relaja los músculos, al aumentar la circulación sanguínea y además reduce el ritmo cardiaco y disminuye la presión de la sangre. Es un masaje completo y distinto.",
+        "price": 0,
+        "time": 60,
+        "category": [
+            "1",
+            "2"
+        ]
+    },
+    {
+        "id": "MH-002",
+        "name": "Reflexología facial",
+        "title": "Tratamiento de los oídos Cera Hopi",
+        "imageURL": "/images/image002.jpg",
+        "description": "Empezamos primero con un masaje cráneo que Reduce y elimina dolores de cabeza como jaquecas y migrañas. Relaja el sistema nervioso de las zonas craneales, faciales y cervicales. Elimina el dolor cervical. Reduce la posibilidad de vértigos o mareos ocasionados por la vista cansada. Y terminamos con la cera hobi que es muy relajante, se hace que el paciente se acueste de costado, luego se coloca la vela en el oído y, mediante el encuentro del aire caliente de la vela con el frío, la cera dentro del oído se evapora y de allí el oído elimina el exceso de cera, suciedad y líquidos del oído interno.  Cuando se termina la primera oreja, se hacen los mismos pasos en la segunda oreja hasta el final de la segunda. Que beneficios tiene? Reducir los dolores de cabeza frecuentes y severos. Trata las infecciones de oído Facilita el proceso de respiración. Saca la cera del interior de los oídos. Alivia los síntomas de la alergia Reducir el tinnitus Funciona para relajar el cuerpo.",
+        "price": 0,
+        "time": 30,
+        "category": [
+            "1",
+            "4"
+        ]
+    },
+    {
+        "id": "MH-003",
+        "name": "Higiene facial",
+        "title": "Higiene facial con ultrasonidos",
+        "imageURL": "/images/image003.jpeg",
+        "description": "Limpiar la cara de maquillaje e impurezas, utilizar vapor por 10 minutos y despues aplicar un gel especial o humedece con agua para que conduzca el depurador sobre la piel. Cuál es la ventaja de la limpieza facial por ultrasonidos? elimina las células muertas de la piel que se vuelve más suave y saludable en apariencia 1. se limpian los poros 2. las ondas ultrasónicas hacen un ligero masaje, suavizando el relieve de la piel y mejorando la tez. Para quién se recomienda la limpieza ultrasónica? Recomendado para cualquier persona que quiera mejorar rápidamente su cutis. El tratamiento es bastante rápido: la limpieza ultrasónica no lleva más de 10 minutos y junto con la preparación de la piel y la aplicación de una mascarilla lleva un máximo de 40 minutos. Después de la limpieza no hay manchas, marcas ni descamación como después de las exfoliaciones activas, por lo que puede ir con seguridad a un evento o reunión. Indicaciones para el peeling ultrasónico: piel grasa y propensa al acné manchas y cicatrices posteriores al acné brillo graso de la piel poros dilatados tez apagada cambios en la piel relacionados con la edad",
+        "price": 43,
+        "time": 60,
+        "category": [
+            "1",
+            "4"
+        ]
+    },
+    {
+        "id": "MH-004",
+        "name": "Radiofrecuencia facial",
+        "title": "Radiofrecuencia facial (repara,hydrata y afina) + masaje lifting facial Anti Age ",
+        "imageURL": "/images/image004.jpg",
+        "description": "La sesion radiofrecuencia es un tratamiento no invasivo, indoloro que REPARA, HYDRATA, Y AFINA ☺️ Se utilizará una varita conectada a una máquina que crea ondas de radio. Pasarán la varita por su rostro para aplicar ondas de radio a su piel. Las ondas penetran en la piel y calientan las capas más profundas de la piel, lo que provoca que las fibras de colágeno se contraigan y se reorganicen, estimulando así la producción de nuevo colágeno y elastina. Este proceso de regeneración ayuda a mejorar la apariencia de la piel al reducir la apariencia de las arrugas y líneas finas, mejorar la textura y la firmeza.",
+        "price": 45,
+        "time": 30,
+        "category": [
+            "1",
+            "4"
+        ]
+    },
+    {
+        "id": "MH-005",
+        "name": "Tratamiento Facial",
+        "title": "Tratamiento Facial para las manchas y rejuvinacion con Dermapen",
+        "imageURL": "/images/image005.jpeg",
+        "description": "Desintoxica y revitaliza tu piel con nuestra envoltura corporal de algas marinas.",
+        "price": 68,
+        "time": 60,
+        "category": [
+            "1",
+            "4"
+        ]
+    }
+]
