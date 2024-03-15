@@ -1,0 +1,18 @@
+{
+    "es": {
+        "menuHomeOptionText": "Inicio",
+        "menuServicesOptionText": "Servicios",
+        "menuContactOptionText": "Contacto",
+        "menuAdminHomeOptionText": "Inicio",
+        "menuAdminReservationsOptionText": "Reservaciones",
+        "menuAdminCalendarOptionText": "Calendario",
+        "homePresentationTitle": "¡Bienvenido a Magical Hands!",
+        "homePresentationText": "En Magical Hands, nos enorgullecemos de ofrecer una experiencia de masaje única y rejuvenecedora que te transportará a un estado de completa relajación y bienestar. Con un equipo de terapeutas expertos y un enfoque centrado en ti, estamos dedicados a brindarte el máximo cuidado y atención para que puedas disfrutar de una experiencia verdaderamente mágica.",
+        "homePresentationInfoTitle": "¿Qué es un masaje relajante?",
+        "homePresentationInfoText1": "El masaje relajante se puede realizar en todo el cuerpo o en un area específica.",
+        "homePresentationInfoText2": "Se practica con aceites, para permitir que las manos del practicante se deslicen suavemente.",
+        "homePresentationText2": "¡Déjanos ser tus guías en el viaje hacia el bienestar y la relajación!",
+        "homePresentationButtonText": "Reseva tu cita ahora!",
+        "s":""
+    }
+}
