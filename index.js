@@ -23,6 +23,8 @@ server.app.get("/", (req, res) => {
             }
         })
     }
+    else
+        res.send("No sé qué decirte!!");
 })
 server.start(() => {
     console.log(`server is up on port ${port}`);
