@@ -37,7 +37,7 @@ const DateInput = (props: DateInputProps) => {
     const timeOnChange = (time: string) => {
         const endTime = new Date(inputValue + " " + time);
         if (selectedService)
-            endTime.setMinutes(endTime.getMinutes() + selectedService.time);
+            endTime.setMinutes(endTime.getMinutes() + parseFloat(selectedService.time));
         onChange(name, time !== "" ? (inputValue + " " + time + " " + (endTime.getHours() < 10 ? "0" : "") + endTime.getHours() + ":" + (endTime.getMinutes() < 10 ? "0" : "") + endTime.getMinutes()) : "");
     }
 
@@ -56,7 +56,7 @@ const DateInput = (props: DateInputProps) => {
             dispatch(setLoading(false));
         }
     }, [error, loading])
-    console.log(availableHours)
+
     return (
         <Background isValid={isValid !== null ? (!isValid && isBlur) : false} teamColors={teamColors} >
             <label>{label}</label>
@@ -64,7 +64,7 @@ const DateInput = (props: DateInputProps) => {
             <select onChange={(e) => timeOnChange(e.target.value)}>
                 <option selected value="">Seleccionar la hora</option>
                 { availableHours.map((rt, index) => (
-                    <option key={index} value={rt}>{rt}</option>
+                    rt.isAvailable !== "R" && <option key={index} value={rt.hour}>{rt.hour}</option>
                 ))}
             </select>
             { (isValid !== null ? (!isValid && isBlur) : false) &&  <span>{validationError}</span> }

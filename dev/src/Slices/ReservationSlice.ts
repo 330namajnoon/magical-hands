@@ -23,7 +23,10 @@ export type ReservationState = {
     lastReservation: ReservationForm | null;
     spriteSession: any;
     currentStatus: string;
-    availableHours: string[];
+    availableHours: {
+        hour: string;
+        isAvailable: boolean | "R";
+    } [];
 }
 
 export type ReservationForm = {
@@ -73,7 +76,7 @@ export const getReservationesByDate = createAsyncThunk<ReservationTime[], string
     }
 )
 
-export const getAvailableHoursByDate = createAsyncThunk<string[], string>("reservation/getAvailableHoursByDate",
+export const getAvailableHoursByDate = createAsyncThunk<{hour: string, isAvailable: boolean | "R"}[], string>("reservation/getAvailableHoursByDate",
     async (date) => {
         const response = await axios.get(`${serverURL}/availableHours/${date}`);
         return response.data.data;

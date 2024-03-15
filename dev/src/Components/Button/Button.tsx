@@ -1,10 +1,10 @@
 import { CSSProperties } from "react";
-import { Background } from "./styles";
+import { ButtonStyled } from "./styles";
 
 export type ButtonProps = {
-    value: string;
-    style: undefined | CSSProperties;
-    onClick: () => void;
+    value?: string;
+    style?: CSSProperties;
+    onClick?: () => void;
 }
 
 const Button = (props: ButtonProps) => {
@@ -12,9 +12,11 @@ const Button = (props: ButtonProps) => {
     const { value, style, onClick } = props;
 
     return (
-        <Background>
-            <input style={style} onClick={onClick} type="button" value={value}/>
-        </Background>
+
+        <ButtonStyled style={style} onClick={onClick}>
+            {value}
+        </ButtonStyled>
+
     );
 }
 

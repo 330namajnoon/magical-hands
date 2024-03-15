@@ -1,9 +1,10 @@
 import { Background } from "./styles";
 import { useDispatch, useSelector } from "react-redux";
 import { Store } from "../../store";
-import { AppState, Category, searchForServices } from "../../Slices/AppSlice";
+import { AppState, Category, searchForServices, updateCategories } from "../../Slices/AppSlice";
 import { useEffect, useState } from "react";
 import { teamColors } from "../../config";
+import { AdminState } from "../../Slices/AdminSlice";
 
 const Search = () => {
     const setCategories = (categories: Category[]): {isSelected: boolean, id: string, name: string}[] => {
@@ -17,6 +18,7 @@ const Search = () => {
     }
     const [value, setValue] = useState<string>("");
     const appStore = useSelector<Store>(state => state.app) as AppState;
+    const { adminPromission } = useSelector<Store>(state => state.admin) as AdminState;
     const [categories, setCategoriesState] = useState<{isSelected: boolean, id: string, name: string}[]>([]);
 
     const dispach = useDispatch();
@@ -44,8 +46,9 @@ const Search = () => {
 
     useEffect(() => {
         if (appStore.categories.length > 0 && appStore.services.length > 0)
-            dispach(searchForServices(appStore.categories[0].id));
-    }, [appStore.categories, appStore.services])
+            dispach(searchForServices(appStore.categories.length > 0 ? appStore.categories[0].id : null));
+    }, [appStore.categories, appStore.selectedService])
+    
 
     return (
         <Background teamColors={teamColors}>
@@ -54,8 +57,12 @@ const Search = () => {
                 <span className="material-symbols-outlined">search</span>
             </div>
             <div className="categories">
+                { adminPromission && <h3 className={"category selected"} onClick={() => {
+                    const name = prompt("Nombre de category:");
+                    dispach(updateCategories({status: "CREATE", value: name}) as any)
+                }} >+</h3>}
                 { categories.map((category ,index) => (
-                    <h3 className={category.isSelected ?  "category selected" : "category"} onClick={() => onClick(category.id)} key={index} >{category.name}</h3>
+                    <h3 className={category.isSelected ?  "category selected" : "category"} onClick={() => adminPromission ? dispach(updateCategories({status: "DELETE", value: category.id}) as any) : onClick(category.id)} key={index} >{category.name}</h3>
                 ))}
             </div>
         </Background>

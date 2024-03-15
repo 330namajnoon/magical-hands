@@ -11,7 +11,7 @@ const AdminCalendar = () => {
     const { adminHours, isLoading, dateInputsValue } = useSelector<Store>((state) => state.admin) as AdminState;
     const [index, setIndex] = useState<number | null>(null);
     const [isSaved, setIsSaved] = useState<boolean>(false);
-    const [status, setStatus] = useState<boolean>(false);
+    const [status, setStatus] = useState<boolean | "R">(false);
     const dispatch = useDispatch();
 
     const getAllIndexs = (start: number, end: number): number[] => {
@@ -69,7 +69,7 @@ const AdminCalendar = () => {
                 {adminHours.hours.map((hour, index) => (
                     <div key={index} className="column-container">
                         <div className="hour">{hour.hour}</div>
-                        <div id={index + ""} onClick={onClich} className={hour.isAvailable ? "active-hour" : "desactive-hour"}></div>
+                        <div id={index + ""} onClick={onClich} className={hour.isAvailable === "R" ? "reserved-hour" : hour.isAvailable ? "active-hour" : "desactive-hour"}></div>
                     </div>
                 ))}
             </div>

@@ -21,7 +21,7 @@ export type AdminReservationData = {
 
 export type AdminHour = {
     hour: string;
-    isAvailable: boolean;
+    isAvailable: boolean | "R";
 }
 
 export type DateInputsValue = {
@@ -39,6 +39,7 @@ export type AdminState = {
         date: string;
         hours: AdminHour[];
     };
+    adminPromission: boolean;
 }
 
 export const getAdminReservationsByDate = createAsyncThunk<AdminReservationData[], { startDate: string, endDate: string }>("admin/getAdminReservationsByDate",
@@ -83,7 +84,8 @@ const initialState: AdminState = {
         startDate: dateToString(getDate(0)),
         endDate: dateToString(getDate(30)),
         calendar: dateToString(getDate(0)),
-    }
+    },
+    adminPromission: false
 }
 
 const createAdminHours = (renge: number = 15, availabledHours: {date: string, hours: AdminHour[]}): {date: string, hours: AdminHour[]} => {
@@ -95,7 +97,8 @@ const createAdminHours = (renge: number = 15, availabledHours: {date: string, ho
                 const hour = index < 10 ? `0${index}` : `${index}`;
                 const minutes = index1 < 10 ? `0${index1}` : `${index1}`;
                 const hourToString = `${hour}:${minutes}`;
-                hours.push({ hour: hourToString, isAvailable: availabledHours.hours.find(ah => ah.hour === hourToString) ? true : false });
+                const hourFinded = availabledHours.hours.find(ah => ah.hour === hourToString);
+                hours.push({ hour: hourToString, isAvailable: hourFinded ? hourFinded.isAvailable : false});
             }
         }
     }
@@ -116,6 +119,9 @@ const adminSlice = createSlice({
                 else
                     state.adminHours.hours[n].isAvailable = action.payload.isAvailable;
             })
+        },
+        setAdminPromission: (state, action: PayloadAction<boolean>) => {
+            state.adminPromission = action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -158,5 +164,5 @@ const adminSlice = createSlice({
     }
 });
 
-export const { setDateInputsValue, setIsAvailableHour } = adminSlice.actions;
+export const { setDateInputsValue, setIsAvailableHour, setAdminPromission } = adminSlice.actions;
 export default adminSlice.reducer;

@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import { Background } from "./styles";
 import { Store } from "../../store";
-import { clientURL, serverURL, teamColors } from "../../config";
+import { serverURL, teamColors } from "../../config";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
@@ -11,6 +11,7 @@ import { ReservationState, getStripeSession, reservationStatuses, sendReservatio
 import { decode, encode } from "../../Utils/createTokenBase";
 import { UserState } from "../../Slices/UserSlice";
 import { setSearchQuerys } from "../../Utils/setSearchQuerys";
+import routerAddresses from "../../constants/routerAddresses";
 
 export type Order = {
     name: string;
@@ -62,7 +63,7 @@ const ServiceDetails = () => {
     const back = (e: any) => {
         if (e.target.id === "backPromise") {
             dispatch(setSelectedService(null));
-            navegate("/magicalHends/services");
+            navegate(routerAddresses.SERVICES);
             setReservation(false);
         }
     }
@@ -128,7 +129,7 @@ const ServiceDetails = () => {
         const paramValue = encode(JSON.stringify({ ...order, serviceId: selectedService?.id, status: undefined }));
         const newSearchString = setSearchQuerys("reservationForm", paramValue, location.search);
         if (selectedService)
-            dispatch(getStripeSession({ email: order.email, price: selectedService?.price, service: selectedService.name, description: selectedService.title, successURL: `${clientURL}${location.pathname}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
+            dispatch(getStripeSession({ email: order.email, price: parseFloat(selectedService?.price), service: selectedService.name, description: selectedService.title, successURL: `${window.location.href.replace(window.location.search, "")}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
     }
 
     useEffect(() => {
@@ -175,7 +176,9 @@ const ServiceDetails = () => {
     useEffect(() => {
         switch (currentStatus) {
             case reservationStatuses.SENDED_STRIPE_SESSION:
-                open(spriteSession.url);
+                const a = document.createElement("a");
+                a.href = spriteSession.url;
+                a.click();
                 break;
             case reservationStatuses.SENDED_RESERVATION_REQUEST:
                 if (lastReservation) {
@@ -203,7 +206,7 @@ const ServiceDetails = () => {
                 dispatch(setSelectedService(null));
                 dispatch(setCurrentStatus(reservationStatuses.RESERVATION_FORM));
                 dispatch(setLoading(false));
-                navegate("/magicalHends/services/reservationInfo");
+                navegate(routerAddresses.RESERVATION_INFO);
                 break;
             default:
                 break;

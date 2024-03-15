@@ -1,10 +1,11 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { Background } from "./styles";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { teamColors } from "../../config";
 import routerAddresses from "../../constants/routerAddresses";
+import Translator from "../Translator";
 
-export type MenuOption = { name: string; path: string, isSelected: boolean };
+export type MenuOption = { name: any, path: string, isSelected: boolean };
 
 export const menuHeight = 40;
 
@@ -13,43 +14,50 @@ const Menu = () => {
     const location = useLocation();
     const { pathname } = useLocation();
 
-    const [options, setOptions] = useState<MenuOption[]>([
-        {
-            name: "Inicio",
-            path: routerAddresses.HOME,
-            isSelected: pathname.includes(routerAddresses.HOME) ? true : false,
-        },
-        {
-            name: "Servicios",
-            path: routerAddresses.SERVICES,
-            isSelected: pathname.includes(routerAddresses.SERVICES) ? true : false,
-        },
-        {
-            name: "Contacto",
-            path: routerAddresses.CONTACT,
-            isSelected: pathname.includes(routerAddresses.CONTACT) ? true : false,
-        },
-    ]);
+    const [options, setOptions] = useState<MenuOption[]>(getInitialOptions());
 
-    const [adminOptions, setAdminOptions] = useState<MenuOption[]>([
-        {
-            name: "Inicio",
-            path: "/admin",
-            isSelected: pathname.includes("/admin") ? true : false,
-        },
-        {
-            name: "Reservaciones",
-            path: "/admin/reservations",
-            isSelected: pathname.includes("/admin/reservations") ? true : false,
-        },
-        {
-            name: "Calendar",
-            path: "/admin/calendar",
-            isSelected: pathname.includes("/admin/calendar") ? true : false,
-        },
-        
-    ]);
+    const [adminOptions, setAdminOptions] = useState<MenuOption[]>(getAdminInitialOptions());
 
+    function getInitialOptions() {
+        return [
+            {
+                name: <Translator translationKey="menuHomeOptionText" />,
+                path: routerAddresses.HOME,
+                isSelected: pathname.includes(routerAddresses.HOME) ? true : false,
+            },
+            {
+                name: <Translator translationKey="menuServicesOptionText" />,
+                path: routerAddresses.SERVICES,
+                isSelected: pathname.includes(routerAddresses.SERVICES) ? true : false,
+            },
+            {
+                name: <Translator translationKey="menuContactOptionText" />,
+                path: routerAddresses.CONTACT,
+                isSelected: pathname.includes(routerAddresses.CONTACT) ? true : false,
+            },
+        ];
+    }
+
+    function getAdminInitialOptions() {
+        return [
+            {
+                name: <Translator translationKey="menuAdminHomeOptionText" />,
+                path: routerAddresses.ADMIN,
+                isSelected: pathname.includes(routerAddresses.ADMIN) ? true : false,
+            },
+            {
+                name: <Translator translationKey="menuAdminReservationsOptionText" />,
+                path: routerAddresses.ADMIN_RESERVATIONS,
+                isSelected: pathname.includes(routerAddresses.ADMIN_RESERVATIONS) ? true : false,
+            },
+            {
+                name: <Translator translationKey="menuAdminCalendarOptionText" />,
+                path: routerAddresses.ADMIN_CALENDAR,
+                isSelected: pathname.includes(routerAddresses.ADMIN_CALENDAR) ? true : false,
+            },
+    
+        ];
+    }
 
     const onClick = (option: MenuOption) => {
         if (location.pathname.includes("admin"))
@@ -72,6 +80,11 @@ const Menu = () => {
             }))
         navegate(option.path);
     }
+
+    useEffect(() => {
+        setOptions(getInitialOptions());
+        setAdminOptions(getAdminInitialOptions());
+    }, [pathname])
 
     return (
         <Background height={menuHeight} teamColors={teamColors}>

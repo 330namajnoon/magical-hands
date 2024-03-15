@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { setSelectedService } from "../../Slices/AppSlice";
 import { setLastReservation } from "../../Slices/ReservationSlice";
 import { useEffect } from "react";
+import routerAddresses from "../../constants/routerAddresses";
 
 export type MenuOption = { name: string; path: string, isSelected: boolean };
 
@@ -21,7 +22,7 @@ const Menu = () => {
     const onClick = () => {
         dispach(setSelectedService(null));
         dispach(setLastReservation(null));
-        navigate("/magicalHends/services");
+        navigate(routerAddresses.SERVICES);
     }
 
     return (

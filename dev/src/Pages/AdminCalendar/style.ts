@@ -28,11 +28,15 @@ export const Background = styled.div`
                 }
 
                 .desactive-hour {
-                    background-color: ${teamColors[4]};
+                    background-color: ${teamColors[2]};
                 }
 
                 .active-hour {
                     background-color: ${teamColors[0]};
+                }
+                
+                .reserved-hour {
+                    background-color: ${teamColors[1]};
                 }
             }
         }

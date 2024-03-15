@@ -3,7 +3,7 @@ import { teamColors } from "../../config";
 
 const Services = () => {
     
-
+    
     return (
         <Background teamColors={teamColors}>
            
