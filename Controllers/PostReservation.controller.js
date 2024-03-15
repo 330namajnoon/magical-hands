@@ -40,16 +40,44 @@ const postReservationController = new Controller({ method: "POST", name: "reserv
             const reservationes = JSON.parse(data.toString());
             const reservation = { client_id: user.id, date, startTime, endTime, serviceId };
             reservationes.unshift(reservation);
-            fs.writeFile("./Database/reservationes.json", JSON.stringify(reservationes), (err) => {
+            fs.readFile("./Database/adminHours.json", (err, data) => {
                 if (err)
                     res.status(5000).send("Error");
-                fs.writeFile("./Database/users.json", JSON.stringify(users), (err) => {
-                    if (err)
-                        res.status(5000).send("Error");
-                    res.status(200).send(new Response(JSON.stringify({...user,...reservation, client_id: undefined})));
+                /**
+                 * @type {{date: string, hours: {hour: string, isAvailable: boolean}[]}[]} adminHours
+                 */
+                let adminHours = JSON.parse(data.toString());
+                let startDate = new Date(`${date} ${startTime}`);
+                let endDate = new Date(`${date} ${endTime}`);
+                adminHours = adminHours.map(ah => {
+                    if (ah.date === reservation.date) {
+                        return {
+                            ...ah, hours: ah.hours.map(hs => {
+                                let d = new Date(`${date} ${hs.hour}`);
+                                if (d >= startDate && d <= endDate)
+                                    return { ...hs, isAvailable: "R" };
+                                return hs;
+                            })
+                        }
+                    }
+                    return ah;
                 });
 
-            });
+                fs.writeFile("./Database/reservationes.json", JSON.stringify(reservationes), (err) => {
+                    if (err)
+                        res.status(5000).send("Error");
+                    fs.writeFile("./Database/users.json", JSON.stringify(users), (err) => {
+                        if (err)
+                            res.status(5000).send("Error");
+                        fs.writeFile("./Database/adminHours.json", JSON.stringify(adminHours), (err) => {
+                            if (err)
+                                res.status(5000).send("Error");
+                            res.status(200).send(new Response(JSON.stringify({ ...user, ...reservation, client_id: undefined })));
+                        });
+                    });
+
+                });
+            })
 
         })
     })

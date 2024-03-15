@@ -11,7 +11,7 @@ const getAvailableHoursByDateController = new Controller({method:"GET", name:"Gi
          */
         const availableHours = JSON.parse(data.toString());
         const find = availableHours.filter(res => res.date == req.params.date);
-        res.send(new Response(find[0] ? find[0].hours.map(f => f.hour) : []));
+        res.send(new Response(find[0] ? find[0].hours : []));
     })    
 })
 

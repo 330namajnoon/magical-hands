@@ -1,18 +1,1 @@
-[
-    {
-        "id": "1",
-        "name": "Todos"
-    },
-    {
-        "id": "2",
-        "name": "Masage"
-    },
-    {
-        "id": "3",
-        "name": "Vip Individual"
-    },
-    {
-        "id": "4",
-        "name": "Tratamientos"
-    }
-]
+[{"id":"1","name":"Todos"},{"id":"2","name":"Masaje"}]
