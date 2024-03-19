@@ -3,6 +3,7 @@ import axios from "axios";
 import { serverURL } from "../config";
 import { encode } from "../Utils/createTokenBase"
 import emailjs from "@emailjs/browser"
+import parseint from "../Utils/parsInt";
 
 export type ReservationTime = {
     startTime: string;
@@ -16,6 +17,13 @@ export type Reservation = {
     endTime: string;
 }
 
+export type Discount = {
+    id: number;
+    code: string;
+    calculation: string;
+    services: string[];
+}
+
 export type ReservationState = {
     loading: boolean;
     error: any;
@@ -23,10 +31,11 @@ export type ReservationState = {
     lastReservation: ReservationForm | null;
     spriteSession: any;
     currentStatus: string;
+    discount: Discount | null;
     availableHours: {
         hour: string;
         isAvailable: boolean | "R";
-    } [];
+    }[];
 }
 
 export type ReservationForm = {
@@ -65,6 +74,7 @@ const initialState: ReservationState = {
     reservatonesBySelectedDate: null,
     spriteSession: null,
     lastReservation: null,
+    discount: null,
     currentStatus: reservationStatuses.RESERVATION_FORM,
     availableHours: [],
 }
@@ -76,7 +86,7 @@ export const getReservationesByDate = createAsyncThunk<ReservationTime[], string
     }
 )
 
-export const getAvailableHoursByDate = createAsyncThunk<{hour: string, isAvailable: boolean | "R"}[], string>("reservation/getAvailableHoursByDate",
+export const getAvailableHoursByDate = createAsyncThunk<{ hour: string, isAvailable: boolean | "R" }[], string>("reservation/getAvailableHoursByDate",
     async (date) => {
         const response = await axios.get(`${serverURL}/availableHours/${date}`);
         return response.data.data;
@@ -111,8 +121,15 @@ export const sendReservationInfoEmail = createAsyncThunk<number, EmailData>("res
 
 export const getStripeSession = createAsyncThunk<any, { email: string, price: number, service: string, description: string, successURL: string, cancelURL: string }>("reservation/getStripeSession",
     async (data) => {
-        const response = await axios.get(`${serverURL}/stripeSession/${encode(JSON.stringify({ email: data.email, price: data.price * 100, service: data.service, description: data.description, successURL: data.successURL, cancelURL: data.cancelURL}))}`);
-        return response.data.data
+        const response = await axios.get(`${serverURL}/stripeSession/${encode(JSON.stringify({ email: data.email, price: data.price * 100, service: data.service, description: data.description, successURL: data.successURL, cancelURL: data.cancelURL }))}`);
+        return response.data.data;
+    }
+)
+
+export const discountCodeValidation = createAsyncThunk<Discount, { code: string, serviceId: string }>("reservation/discountCodeValidation",
+    async (props) => {
+        const response = await axios.get(`${serverURL}/discount_code_validation?code=${props.code}&serviceId=${props.serviceId}`);
+        return response.data.data;
     }
 )
 
@@ -126,6 +143,9 @@ const reservationSlice = createSlice({
         setCurrentStatus: (state, action) => {
             state.currentStatus = action.payload;
         },
+        setDiscount: (state, action) => {
+            state.discount = action.payload;
+        }
     },
     extraReducers: (builder) => {
         builder
@@ -193,8 +213,23 @@ const reservationSlice = createSlice({
                 state.error = action.error.code;
                 state.loading = false;
             })
+        builder
+            .addCase(discountCodeValidation.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(discountCodeValidation.fulfilled, (state, action) => {
+                state.loading = false;
+                state.error = null;
+                state.discount = action.payload;
+
+            })
+            .addCase(discountCodeValidation.rejected, (state, action) => {
+                state.error = parseint(action.error.message as string);
+                state.discount = null;
+                state.loading = false;
+            })
     }
 })
 
-export const { setLastReservation, setCurrentStatus } = reservationSlice.actions;
+export const { setLastReservation, setCurrentStatus, setDiscount } = reservationSlice.actions;
 export default reservationSlice.reducer;

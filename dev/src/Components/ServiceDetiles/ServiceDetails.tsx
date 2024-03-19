@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { AppState, setLoading, setSelectedService } from "../../Slices/AppSlice";
 import TextInput from "../TextInput";
 import DateInput from "../DateInput";
-import { ReservationState, getStripeSession, reservationStatuses, sendReservationInfoEmail, sendReservationRequest, setCurrentStatus, setLastReservation } from "../../Slices/ReservationSlice";
+import { ReservationState, discountCodeValidation, getStripeSession, reservationStatuses, sendReservationInfoEmail, sendReservationRequest, setCurrentStatus, setDiscount, setLastReservation } from "../../Slices/ReservationSlice";
 import { decode, encode } from "../../Utils/createTokenBase";
 import { UserState } from "../../Slices/UserSlice";
 import { setSearchQuerys } from "../../Utils/setSearchQuerys";
@@ -19,6 +19,7 @@ export type Order = {
     lastName2: string;
     email: string;
     phoneNumber: string;
+    discountCode: string;
     date: string;
     status: {
         name: boolean;
@@ -26,6 +27,7 @@ export type Order = {
         lastName2: boolean;
         email: boolean;
         phoneNumber: boolean;
+        discountCode: boolean;
         date: boolean;
         unChangeCount: number;
     }
@@ -34,7 +36,7 @@ export type Order = {
 const ServiceDetails = () => {
     const { selectedService, services } = useSelector<Store>((state) => state.app) as AppState;
     const { userInfo } = useSelector<Store>((state) => state.user) as UserState;
-    const { loading, lastReservation, spriteSession, currentStatus } = useSelector<Store>((state) => state.reservation) as ReservationState;
+    const { error, loading, lastReservation, spriteSession, currentStatus, discount } = useSelector<Store>((state) => state.reservation) as ReservationState;
     const [search, setSearch] = useSearchParams();
     const location = useLocation();
     const [reservation, setReservation] = useState<boolean>(false);
@@ -46,6 +48,7 @@ const ServiceDetails = () => {
         lastName2: "",
         email: "",
         phoneNumber: "",
+        discountCode: "",
         date: "",
         status: {
             name: false,
@@ -53,6 +56,7 @@ const ServiceDetails = () => {
             lastName2: true,
             email: false,
             phoneNumber: false,
+            discountCode: false,
             date: false,
             unChangeCount: 0,
         }
@@ -95,6 +99,7 @@ const ServiceDetails = () => {
         return phoneNumber.match(/^[0-9]{9}/) ? true : false;
     }
 
+
     const onChange = (name: string, value: string) => {
         switch (name) {
             case "name":
@@ -112,6 +117,14 @@ const ServiceDetails = () => {
             case "phoneNumber":
                 if (value !== "" ? ("0123456789".includes(value[value.length - 1]) && value.length < 10) : true)
                     setOrder({ ...order, phoneNumber: value, status: { ...order.status, phoneNumber: phoneNumberValidation(value), unChangeCount: order.status.unChangeCount + 1 } });
+                break;
+            case "discountCode":
+                if (value.length === 10 && selectedService) {
+                    dispatch(discountCodeValidation({ code: value, serviceId: selectedService.id }) as any);
+                    setOrder({ ...order, discountCode: value, status: { ...order.status, discountCode: true, unChangeCount: order.status.unChangeCount + 1 } });
+                }
+                else
+                    setOrder({ ...order, discountCode: value, status: { ...order.status, discountCode: true, unChangeCount: order.status.unChangeCount + 1 } });
                 break;
             case "date":
                 setOrder({ ...order, date: value, status: { ...order.status, date: value !== "" ? true : false, unChangeCount: order.status.unChangeCount + 1 } });
@@ -132,9 +145,17 @@ const ServiceDetails = () => {
             dispatch(getStripeSession({ email: order.email, price: parseFloat(selectedService?.price), service: selectedService.name, description: selectedService.title, successURL: `${window.location.href.replace(window.location.search, "")}?${newSearchString}`, cancelURL: "http://localhost:5173/magicalHends/services" }) as any);
     }
 
+    const discountCalculation = (price: number, calculation: string): number => {
+        let res = eval(calculation) as number;
+        res = Number(res.toFixed(2));
+        return res;
+    }
+
     useEffect(() => {
-        if (!selectedService)
+        if (!selectedService) {
+            dispatch(setDiscount(null));
             dispatch(setSelectedService(search.get("serviceId")));
+        }
     })
 
     useEffect(() => {
@@ -213,10 +234,9 @@ const ServiceDetails = () => {
         }
     }, [currentStatus, services])
 
-
     return selectedService && (
         <Background id="backPromise" imageurl={serverURL + selectedService.imageURL} teamColors={teamColors} onClick={(e: any) => back(e)}>
-            <div  className="backButton">
+            <div className="backButton">
                 <span id="backPromise" className="material-symbols-outlined" onClick={(e: any) => back(e)}>reply</span>
             </div>
             <div className="details">
@@ -224,8 +244,22 @@ const ServiceDetails = () => {
                 <h3>{selectedService.title}</h3>
                 <h2>{selectedService.description}</h2>
                 <h4>{selectedService.time}Min</h4>
-                <h4>{selectedService.price}€</h4>
+                {discount ? (
+                    <h4>{selectedService.price}€ <div></div>{discountCalculation(parseFloat(selectedService.price), discount.calculation)}€</h4>
+                ) : (
+                    <h4>{selectedService.price}€</h4>
+                )
+                }
                 <div className={reservation || search.get("user") ? "reservationForm active" : "reservationForm"}>
+                    <TextInput
+                        name="discountCode"
+                        label="Codigo de descuento"
+                        placeholder="Escribe tu codigo de descuento"
+                        value={order.discountCode}
+                        onChange={onChange}
+                        validationError="El codigo no es valido."
+                        isValid={!(error === 501 || error === 502)}
+                    />
                     <DateInput
                         name="date"
                         label="Fecha de reservacion"
@@ -279,6 +313,7 @@ const ServiceDetails = () => {
                         validationError="No puedes dejar vacio este campo."
                         isValid={order.status.phoneNumber}
                     />
+
                     <button className={orderFormValidation() ? "reservationButtonActive" : "reservationButton"} disabled={!orderFormValidation()} onClick={sendStripeSessionRequest}>Reserva tu cita</button>
                     <button style={{ visibility: "hidden" }}></button>
 

@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { menuHeight } from "../Menu/Menu";
 import { headerHeight } from "../Header/Header";
+import { teamColors } from "../../config";
 
 export const Background = styled.div<{ imageurl: string, teamColors: string[] }>`
     position: absolute;
@@ -48,6 +49,8 @@ export const Background = styled.div<{ imageurl: string, teamColors: string[] }>
             font-weight: 600;
             margin-bottom: 20px;
             ${(props) => props.teamColors[3]};
+         
+
         }
 
         h3 {
@@ -66,6 +69,16 @@ export const Background = styled.div<{ imageurl: string, teamColors: string[] }>
             font-weight: 700;
             margin-bottom: 15px;
             font-size: 30px;
+            position: relative;
+            width: auto;
+            div {
+                position: absolute;
+                width: 20%;
+                min-height: 5px;
+                top: 15px;
+                background-color: ${teamColors[4]};
+                transform: rotate(25deg);
+            }
         }
 
         button {
