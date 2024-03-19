@@ -1,4 +1,5 @@
 const createNewService = require("./CreateNewService.controller");
+const discountValidation = require("./DiscountValidation.controller");
 const getAdminHoursByDateController = require("./GetAdminHoursByDate.controller");
 const getAdminReservationesByDateController = require("./GetAdminReservationesByDate.controller");
 const getAvailableHoursByDateController = require("./GetAvailableHoursByDate.controller");
@@ -29,6 +30,7 @@ const magicalHandsControllers = [
     updateServiceByIdController,
     createNewService,
     updateCategories,
+    discountValidation,
 ];
 
 module.exports = magicalHandsControllers

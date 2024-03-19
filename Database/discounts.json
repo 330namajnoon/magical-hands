@@ -1,0 +1,8 @@
+[
+    {
+        "id": 1,
+        "code": "MHDC-568HG",
+        "services": ["MH-0"],
+        "calculation": "price / 1.20"
+    }
+]
